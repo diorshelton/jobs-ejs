@@ -1,6 +1,5 @@
 const express = require("express");
 require("express-async-errors");
-
 const app = express();
 
 app.set("view engine", "ejs");
