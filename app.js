@@ -34,6 +34,13 @@ if (app.get("env") === "production") {
 
 app.use(session(sessionParms));
 
+const passport = require("passport");
+const passportInit = require("./passport/passportInit");
+
+passportInit();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(require("connect-flash")());
 
 app.use(require("./middleware/storeLocals"));
@@ -43,16 +50,14 @@ app.get("/", (req, res) => {
 app.use("/sessions", require("./routes/sessionRoutes"));
 
 
+
 // secret word handling
-app.get("/secretWord", (req, res) => {
-  if (!req.session.secretWord) {
-    req.session.secretWord = "syzygy";
-  }
-  res.locals.info = req.flash("info");
-  res.locals.errors = req.flash("error");
-  res.render("secretWord", { secretWord: req.session.secretWord });
-  console.log(res.locals)
-});
+const secretWordRouter = require("./routes/secretWord")
+
+const auth = require("./middleware/auth");
+app.use("/secretWord", auth, secretWordRouter);
+
+
 
 app.post("/secretWord", (req, res) => {
   if (req.body.secretWord.toUpperCase()[0] == "P") {
