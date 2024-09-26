@@ -1,6 +1,8 @@
 const express = require("express");
 require("express-async-errors");
 const app = express();
+const csrf = require('host-csrf');
+const cookieParser = require('cookie-parser');
 
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
@@ -31,6 +33,22 @@ if (app.get("env") === "production") {
   app.set("trust proxy", 1); // trust first proxy
   sessionParms.cookie.secure = true; // serve secure cookies
 }
+
+// handle CSRF
+app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(express.urlencoded({ extended: false }));
+let csrf_development_mode = true;
+if (app.get("env") === "production") {
+  csrf_development_mode = false;
+  app.set("trust proxy", 1);
+}
+const csrf_options = {
+  protected_operations: ["PATCH"],
+  protected_content_types: ["application/json"],
+  development_mode: csrf_development_mode,
+};
+const csrf_middleware = csrf(csrf_options); //initialise and return middlware
+
 
 app.use(session(sessionParms));
 
