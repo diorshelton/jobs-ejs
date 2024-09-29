@@ -50,7 +50,6 @@ const csrf_options = {
 const csrf_middleware = csrf(csrf_options); //initialize and return middlware
 
 app.use(csrf_middleware, (req, res, next) => {
-  console.log(process.env)
   next()
 });
 
@@ -78,7 +77,7 @@ app.use("/sessions", require("./routes/sessionRoutes"));
 const secretWordRouter = require("./routes/secretWord")
 
 const auth = require("./middleware/auth");
-app.use("/secretWord", auth, secretWordRouter);
+app.use("/secretWord", auth, csrf_middleware,secretWordRouter);
 
 
 
