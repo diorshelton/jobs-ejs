@@ -5,7 +5,7 @@ const getAllPosts = async (req, res) => {
 }
 
 const addNewPost = async (req, res) => {
-  res.send("add a post")
+  res.send("add a new post")
 }
 
 const newPostForm = async (req, res) => {
@@ -13,7 +13,8 @@ const newPostForm = async (req, res) => {
 }
 
 const getPostEdit = async (req, res) => {
-  res.send("Retrieve single post and show in edit box")
+  const  _id  = req.params;
+  res.send('Retrieve single post and show in edit box')
 }
 
 const getPostUpdate = async (req, res) => {

@@ -38,6 +38,7 @@ if (app.get("env") === "production") {
 // handle CSRF
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.urlencoded({ extended: false }));
+
 let csrf_development_mode = true;
 if (app.get("env") === "production") {
   csrf_development_mode = false;
@@ -75,11 +76,10 @@ app.use("/sessions", require("./routes/sessionRoutes"));
 const secretWordRouter = require("./routes/secretWord")
 
 const auth = require("./middleware/auth");
-app.use("/secretWord", auth, csrf_middleware, secretWordRouter);
+// app.use("/secretWord", auth, csrf_middleware, secretWordRouter);
+app.use("/secretWord", auth, secretWordRouter);
 
-
-
-app.use("/posts", auth, postsRouter)
+app.use("/posts", postsRouter)
 
 app.use((req, res) => {
   res.status(404).send(`That page (${req.url}) was not found.`);

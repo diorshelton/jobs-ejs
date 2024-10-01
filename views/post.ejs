@@ -1,0 +1,27 @@
+<h2>Posts List</h2>
+<table id="Posts-table">
+  <tr id="Posts-table-header">
+    <th>Title</th>
+    <th>Message</th>
+    <th>Visible</th>
+    <th colspan="2"></th>
+  </tr>
+  <% if (Posts && Posts.length) { %>
+    <% Posts.forEach((post)=> { %>
+      <tr>
+        <td>
+          <%= post.title %>
+        </td>
+        <td>
+          <%= post.message %>
+        </td>
+        <td>
+          <%= post.visible %>
+        </td>
+        <td><button type="button">edit</button></td>
+        <td>button type="button">delete</button></td>
+      </tr>
+      <% }) %>
+        <% } %>
+        <button>add new post</button>
+</table>
