@@ -6,8 +6,8 @@
     <th>Visible</th>
     <th colspan="2"></th>
   </tr>
-  <% if (Posts && Posts.length) { %>
-    <% Posts.forEach((post)=> { %>
+  <% if (posts && posts.length) { %>
+    <% posts.forEach((post)=> { %>
       <tr>
         <td>
           <%= post.title %>
@@ -18,8 +18,10 @@
         <td>
           <%= post.visible %>
         </td>
-        <td><button type="button">edit</button></td>
-        <td>button type="button">delete</button></td>
+        <td><a href="/posts/edit/<%= post.id %>">
+          <button type="button">edit</button>
+        </a></td>
+        <td><button type="button">delete</button></td>
       </tr>
       <% }) %>
         <% } %>

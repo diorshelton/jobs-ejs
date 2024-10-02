@@ -1,28 +1,42 @@
-const Post = require("../models/Post")
+const Post = require("../models/Post");
 
 const getAllPosts = async (req, res) => {
-  res.send("Retrieve all posts")
-}
+	const posts = await Post.find({ createdBy: req.user._id });
+	res.render("post", { posts });
+};
 
-const addNewPost = async (req, res) => {
-  res.send("add a new post")
-}
+const submitNewPost = async (req, res) => {
+	res.send("add a new post");
+};
 
-const newPostForm = async (req, res) => {
-  res.send("form for a new post")
-}
+const getPostForm = async (req, res) => {
+	res.render("post", { post: null });
+};
 
 const getPostEdit = async (req, res) => {
-  const  _id  = req.params;
-  res.send('Retrieve single post and show in edit box')
-}
+
+    const postId  = req.params;
+    const user  = req.user._id;
+    const body  = req.body
+    console.log(postId, user, body);
+	// try {
+  const post = await Post.findOne({ _id: postId, createdBy: user })
+ res.send("Get POST Edit")
+};
 
 const getPostUpdate = async (req, res) => {
-  res.send("Update specific post")
-}
+	res.send("Update specific post");
+};
 
 const deletePost = async (req, res) => {
-  res.send("Delete a post")
-}
+	res.send("Delete a post");
+};
 
-module.exports = {getAllPosts, addNewPost, newPostForm, getPostEdit, getPostUpdate, deletePost}
+module.exports = {
+	getAllPosts,
+	submitNewPost,
+	getPostForm,
+	getPostEdit,
+	getPostUpdate,
+	deletePost,
+};
