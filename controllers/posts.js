@@ -2,7 +2,7 @@ const Post = require("../models/Post");
 
 const getAllPosts = async (req, res) => {
 	const posts = await Post.find({ createdBy: req.user._id });
-	res.render("post", { posts });
+	res.render("posts", { posts });
 };
 
 const submitNewPost = async (req, res) => {
@@ -14,14 +14,15 @@ const getPostForm = async (req, res) => {
 };
 
 const getPostEdit = async (req, res) => {
-
-    const postId  = req.params;
-    const user  = req.user._id;
-    const body  = req.body
-    console.log(postId, user, body);
-	// try {
-  const post = await Post.findOne({ _id: postId, createdBy: user })
- res.send("Get POST Edit")
+  try {
+        const postId = req.params.id;
+				const user = req.user._id;
+				const post = await Post.findOne({ _id: postId, createdBy: user });
+    res.render("post", {post})
+    
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 const getPostUpdate = async (req, res) => {

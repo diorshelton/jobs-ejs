@@ -1,29 +1,20 @@
-<h2>Posts List</h2>
-<table id="Posts-table">
-  <tr id="Posts-table-header">
-    <th>Title</th>
-    <th>Message</th>
-    <th>Visible</th>
-    <th colspan="2"></th>
-  </tr>
-  <% if (posts && posts.length) { %>
-    <% posts.forEach((post)=> { %>
-      <tr>
-        <td>
-          <%= post.title %>
-        </td>
-        <td>
-          <%= post.message %>
-        </td>
-        <td>
-          <%= post.visible %>
-        </td>
-        <td><a href="/posts/edit/<%= post.id %>">
-          <button type="button">edit</button>
-        </a></td>
-        <td><button type="button">delete</button></td>
-      </tr>
-      <% }) %>
-        <% } %>
-        <button>add new post</button>
-</table>
+<div id="edit-post">
+  <form>
+    <div>
+      <label for="title">Title:</label>
+      <input type="text" id="title" value="<%= post.title %>" />
+    </div>
+    <div>
+      <label for="post-message">Message:</label>
+      <input type="text" id="post-content" value="<%= post.message %>" />
+    </div>
+    <div>
+      <label for="visible">Visible:</label>
+      <select id="visible">
+        <option value="true">true</option>
+        <option value="false">false</option>
+      </select>
+    </div>
+    <button type="button" id="adding-post">Update</button>
+  </form>
+</div>
