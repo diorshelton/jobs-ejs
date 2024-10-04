@@ -26,13 +26,12 @@ const getPostEdit = async (req, res) => {
 };
 
 const getPostUpdate = async (req, res) => {
-
 	try {
 		console.log("posts.js", req.body);
 		Post.findByIdAndUpdate();
 		res.send("Update specific post");
   } catch (error) {
-   console 
+   console.log(error)
   }
 };
 
