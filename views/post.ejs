@@ -1,20 +1,17 @@
-<div id="edit-post">
-  <form>
-    <div>
-      <label for="title">Title:</label>
-      <input type="text" id="title" value="<%= post.title %>" />
-    </div>
-    <div>
-      <label for="post-message">Message:</label>
-      <input type="text" id="post-content" value="<%= post.message %>" />
-    </div>
-    <div>
-      <label for="visible">Visible:</label>
-      <select id="visible">
-        <option value="true">true</option>
-        <option value="false">false</option>
-      </select>
-    </div>
-    <button type="button" id="adding-post">Update</button>
-  </form>
-</div>
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
+      <form method="POST" action="http://localhost:3000/posts/update/<%=post.id%>">
+        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+        <label name="title">Title:</label>
+        <input name="title" value="<%- post.title%>"/><br/>
+        <label name="message">Message:</label>
+        <input name="message" value="<%- post.message%>"/><br/>
+        <label for="visibility">Visible:</label>
+        <select name= "visible" id="visibility" value="<%=post.visible%>">
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+        <button>Submit</button>
+      </form>
+      <button>Submit</button>
+  <%- include("partials/footer.ejs") %>

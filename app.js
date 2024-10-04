@@ -1,14 +1,15 @@
 const express = require("express");
 require("express-async-errors");
-const app = express();
-const csrf = require('host-csrf');
+require("dotenv").config(); // to load the .env file into the process.env object
 const cookieParser = require('cookie-parser');
-const postsRouter = require("./routes/posts")
+
+const app = express();
+
+app.use(require("connect-flash")());
 
 app.set("view engine", "ejs");
 app.use(require("body-parser").urlencoded({ extended: true }));
 
-require("dotenv").config(); // to load the .env file into the process.env object
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const url = process.env.MONGO_URI;
@@ -35,7 +36,11 @@ if (app.get("env") === "production") {
   sessionParms.cookie.secure = true; // serve secure cookies
 }
 
+app.use(session(sessionParms));
+
 // handle CSRF
+const csrf = require("host-csrf");
+
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.urlencoded({ extended: false }));
 
@@ -51,12 +56,8 @@ const csrf_options = {
 };
 const csrf_middleware = csrf(csrf_options); //initialize and return middlware
 
-app.use(csrf_middleware, (req, res, next) => {
-  next()
-});
 
-app.use(session(sessionParms));
-
+// passport
 const passport = require("passport");
 const passportInit = require("./passport/passportInit");
 
@@ -64,22 +65,21 @@ passportInit();
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(require("connect-flash")());
 
 app.use(require("./middleware/storeLocals"));
 app.get("/", (req, res) => {
   res.render("index");
 });
-app.use("/sessions", require("./routes/sessionRoutes"));
+app.use("/sessions", csrf_middleware, require("./routes/sessionRoutes"));
 
 // secret word handling
 const secretWordRouter = require("./routes/secretWord")
-
 const auth = require("./middleware/auth");
 app.use("/secretWord", auth, csrf_middleware, secretWordRouter);
-// app.use("/secretWord", auth, secretWordRouter);
 
-app.use("/posts", postsRouter)
+// post routing
+const postsRouter = require("./routes/posts");
+app.use("/posts",auth, csrf_middleware, postsRouter)
 
 app.use((req, res) => {
   res.status(404).send(`That page (${req.url}) was not found.`);

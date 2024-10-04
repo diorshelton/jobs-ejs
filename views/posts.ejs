@@ -1,3 +1,5 @@
+<% -include("partials/head.ejs") %>
+<% -include("partials/header.ejs") %>
 <h2>Posts List</h2>
 <table id="Posts-table">
   <tr id="Posts-table-header">
@@ -19,11 +21,16 @@
           <%= post.visible %>
         </td>
         <td><a href="/posts/edit/<%= post.id %>">
-            <button type="button">edit</button>
+            <button type="button">Edit</button>
           </a></td>
-        <td><button type="button">delete</button></td>
+        <td>
+          <form method="POST" action="/posts/delete/<%= post.id %>" style="display: inline">
+            <button>Delete</button>
+            <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+          </form>
+        </td>
       </tr>
       <% }) %>
         <% } %>
-          <button>add new post</button>
+          <button>Add New Post</button>
 </table>
