@@ -1,5 +1,6 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
+
       <form method="POST" action="http://localhost:3000/posts/update/<%=post.id%>">
         <input type="hidden" name="_csrf" value="<%= _csrf %>">
         <label name="title">Title:</label>

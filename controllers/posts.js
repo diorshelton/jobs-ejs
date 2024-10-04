@@ -1,5 +1,4 @@
 const Post = require("../models/Post");
-const parseVErr = require("../utils/parseValidationErrs");
 
 const getAllPosts = async (req, res) => {
 	const posts = await Post.find({ createdBy: req.user._id });
@@ -11,7 +10,8 @@ const submitNewPost = async (req, res) => {
 };
 
 const getPostForm = async (req, res) => {
-	res.render("post", { post: null });
+  // res.render("post", { post: null });
+  	res.send("new post");
 };
 
 const getPostEdit = async (req, res) => {
@@ -30,8 +30,8 @@ const getPostUpdate = async (req, res) => {
 		body: { title, message },
 		user: { _id: userId },
 		params: { id: postId },
-  } = req;
-  
+	} = req;
+
 	const post = await Post.findOne({ _id: postId, createdBy: userId });
 
 	if (!title === "" || !message === "") {
@@ -46,9 +46,12 @@ const getPostUpdate = async (req, res) => {
 		req.flash("info", "Post Updated.");
 		getAllPosts(req, res);
 	} catch (error) {
-    // return res.render("post", { post: post, errors: req.flash("error") });
-    console.log(error)
-    return req.render("post", { post: post, errors: req.flash("error") });
+		if (error) {
+			req.flash("error", error._message);
+		} else {
+			return next(error);
+		}
+		return res.render("post", { post: post, errors: req.flash("error") });
 	}
 };
 
