@@ -67,7 +67,7 @@ app.use(passport.session());
 
 
 app.use(require("./middleware/storeLocals"));
-app.get("/", (req, res) => {
+app.get("/", csrf_middleware, (req, res) => {
   res.render("index");
 });
 app.use("/sessions", csrf_middleware, require("./routes/sessionRoutes"));

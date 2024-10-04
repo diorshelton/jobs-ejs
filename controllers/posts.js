@@ -26,13 +26,30 @@ const getPostEdit = async (req, res) => {
 };
 
 const getPostUpdate = async (req, res) => {
+	const {
+		body: { title, message },
+		user: { _id: userId },
+		params: { id: postId },
+  } = req;
+  
+	const post = await Post.findOne({ _id: postId, createdBy: userId });
+
+	if (!title === "" || !message === "") {
+		req.flash("error", "Title or Message fields cannot be empty");
+	}
+
 	try {
-		console.log("posts.js", req.body);
-		Post.findByIdAndUpdate();
-		res.send("Update specific post");
-  } catch (error) {
-   console.log(error)
-  }
+		await Post.findByIdAndUpdate({ _id: postId, createdBy: userId }, req.body, {
+			new: true,
+			runValidators: true,
+		});
+		req.flash("info", "Post Updated.");
+		getAllPosts(req, res);
+	} catch (error) {
+    // return res.render("post", { post: post, errors: req.flash("error") });
+    console.log(error)
+    return req.render("post", { post: post, errors: req.flash("error") });
+	}
 };
 
 const deletePost = async (req, res) => {
