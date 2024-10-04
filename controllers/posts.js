@@ -10,8 +10,7 @@ const submitNewPost = async (req, res) => {
 };
 
 const getPostForm = async (req, res) => {
-  // res.render("post", { post: null });
-  	res.send("new post");
+  res.render("post", { post: null });
 };
 
 const getPostEdit = async (req, res) => {

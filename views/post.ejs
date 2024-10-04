@@ -1,18 +1,18 @@
 <%- include("partials/head.ejs") %>
-<%- include("partials/header.ejs") %>
-
-      <form method="POST" action="http://localhost:3000/posts/update/<%=post.id%>">
-        <input type="hidden" name="_csrf" value="<%= _csrf %>">
-        <label name="title">Title:</label>
-        <input name="title" value="<%- post.title%>"/><br/>
-        <label name="message">Message:</label>
-        <input name="message" value="<%- post.message%>"/><br/>
-        <label for="visibility">Visible:</label>
-        <select name= "visible" id="visibility" value="<%=post.visible%>">
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select><br/>
-        <button>Submit</button>
-        <button href="http://localhost:3000/posts/">Cancel</button>
-      </form>
-  <%- include("partials/footer.ejs") %>
+  <%- include("partials/header.ejs") %>
+    <form method="POST"
+      action="<%- (post) ? 'http://localhost:3000/posts/update/' + post.id : 'http://localhost:3000/posts/new' %>">
+      <input type="hidden" name="_csrf" value="<%= _csrf %>">
+      <label name="title">Title:</label>
+      <input name="title" value="<%- (post && post.title) ? post.title : '' %>"" /><br />
+      <label name="message">Message:</label>
+      <input name="message" value=""<%- (post && post.message) ? post.message : '' %>"" /><br />
+      <label for="visibility">Visible:</label>
+      <select name="visible" id="visibility" value=""<%- (post && post.visible) ? post.visible : '' %>"">
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select><br />
+      <button>Submit</button>
+      <button href="http://localhost:3000/posts/">Cancel</button>
+    </form>
+    <%- include("partials/footer.ejs") %>
