@@ -1,12 +1,12 @@
 <%- include("partials/head.ejs") %>
   <%- include("partials/header.ejs") %>
     <form method="POST"
-      action="<%- (post) ? 'http://localhost:3000/posts/update/' + post.id : 'http://localhost:3000/posts/new' %>">
+      action="<%- (post) ? 'http://localhost:3000/posts/update/' + post.id : 'http://localhost:3000/posts/' %>">
       <input type="hidden" name="_csrf" value="<%= _csrf %>">
       <label name="title">Title:</label>
       <input name="title" value="<%- (post && post.title) ? post.title : '' %>"" /><br />
       <label name="message">Message:</label>
-      <input name="message" value=""<%- (post && post.message) ? post.message : '' %>"" /><br />
+      <input name="message" value="<%- (post && post.message) ? post.message : '' %>"" /><br />
       <label for="visibility">Visible:</label>
       <select name="visible" id="visibility" value=""<%- (post && post.visible) ? post.visible : '' %>"">
         <option value="true">True</option>
