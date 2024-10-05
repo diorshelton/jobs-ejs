@@ -1,5 +1,5 @@
 const Post = require("../models/Post");
-const parseVErr = require("../utils/parseValidationErrs")
+const parseVErr = require("../utils/parseValidationErrs");
 
 const getAllPosts = async (req, res) => {
 	const posts = await Post.find({ createdBy: req.user._id });
@@ -7,17 +7,26 @@ const getAllPosts = async (req, res) => {
 };
 
 const submitNewPost = async (req, res) => {
-  	const {
-			body: { title, message },
-			user: { _id: userId },
-		} = req;
-	console.log( userId, title, message)
-  const post = await Post.create()
-  // res.send("add a new post");
+	req.body.createdBy = req.user._id;
+	const post = await Post.create(req.body);
+
+	try {
+		const post = await Post.create(req.body);
+	} catch (error) {
+		if (error.constructor.name === "ValidationError") {
+			parseVErr(error, req);
+		} else if (error) {
+			req.flash("error", error._message);
+		} else {
+			return next(error);
+		}
+		return res.render("post", { post: post, errors: req.flash("error") });
+	}
+	getAllPosts(req, res);
 };
 
 const getPostForm = async (req, res) => {
-  res.render("post", { post: null });
+	res.render("post", { post: null });
 };
 
 const getPostEdit = async (req, res) => {
@@ -27,44 +36,61 @@ const getPostEdit = async (req, res) => {
 		const post = await Post.findOne({ _id: postId, createdBy: user });
 		res.render("post", { post });
 	} catch (error) {
-		console.log(error);
+		if (error.constructor.name === "ValidationError") {
+			parseVErr(error, req);
+		} else if (error) {
+			req.flash("error", error._message);
+		} else {
+			return next(error);
+		}
+		return res.render("post", { post: post, errors: req.flash("error") });
 	}
 };
 
 const getPostUpdate = async (req, res) => {
 	const {
-		body: { title, message },
 		user: { _id: userId },
 		params: { id: postId },
 	} = req;
 
 	const post = await Post.findOne({ _id: postId, createdBy: userId });
 
-	if (!title === "" || !message === "") {
-		req.flash("error", "Title or Message fields cannot be empty");
+	try {
+		await Post.findByIdAndUpdate({ _id: postId, createdBy: userId }, req.body, {
+			new: true,
+			runValidators: true,
+		});
+		req.flash("info", "Post Updated.");
+		getAllPosts(req, res);
+	} catch (error) {
+		if (error.constructor.name === "ValidationError") {
+			parseVErr(error, req);
+		} else if (error) {
+			req.flash("error", error._message);
+		} else {
+			return next(error);
+		}
+		return res.render("post", { post: post, errors: req.flash("error") });
 	}
-
-  try {
-    await Post.findByIdAndUpdate({ _id: postId, createdBy: userId }, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    req.flash("info", "Post Updated.");
-    getAllPosts(req, res);
-  } catch (error) {
-    if (error.constructor.name === "ValidationError") {
-      parseVErr(error, req)
-    } else if (error) {
-      req.flash("error", error._message);
-    } else {
-      return next(error)
-    }
-    return res.render("post", { post: post, errors: req.flash("error") });
-  }
 };
 
 const deletePost = async (req, res) => {
-	res.send("Delete a post");
+	try {
+		const {
+			user: { _id: userId },
+			params: { id: postId },
+		} = req;
+		const post = await Post.findByIdAndDelete({
+			_id: postId,
+			createdBy: userId,
+		});
+		if (!post) {
+			req.flash("error", "Item not found or not authorized to delete.");
+		}
+  } catch (error) {
+    console.log(error)
+  }
+  getAllPosts(req,res)
 };
 
 module.exports = {
