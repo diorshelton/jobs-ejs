@@ -1,7 +1,7 @@
-const Post = require("../models/Post");
+// const Post = require("../models/Post");
 const User = require("../models/User");
 const faker = require("@faker-js/faker").fakerEN_US;
-const FactoryBot = require("factory-bot");
+ const FactoryBot = require("factory-bot");
 require("dotenv").config();
 
 const testUserPassword = faker.internet.password();
@@ -26,10 +26,10 @@ const seed_db = async () => {
 	let testUser = null;
 	try {
 		const mongoURL = process.env.MONGO_URI_TEST;
-		await Job.deleteMany({}); // deletes all job records
+		// await Job.deleteMany({}); // deletes all job records
 		await User.deleteMany({}); // and all the users
 		testUser = await factory.create("user", { password: testUserPassword });
-		await factory.createMany("job", 20, { createdBy: testUser._id }); // put 30 job entries in the database.
+		// await factory.createMany("job", 20, { createdBy: testUser._id }); // put 30 job entries in the database.
 	} catch (e) {
 		console.log("database error");
 		console.log(e.message);

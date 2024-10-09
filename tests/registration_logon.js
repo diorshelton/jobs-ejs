@@ -1,5 +1,5 @@
 const { app } = require("../app");
-// const { factory } = require("../utils/seed_db");
+const { factory } = require("../utils/seed_db");
 const faker = require("@faker-js/faker").fakerEN_US;
 const get_chai = require("../utils/get_chai");
 
